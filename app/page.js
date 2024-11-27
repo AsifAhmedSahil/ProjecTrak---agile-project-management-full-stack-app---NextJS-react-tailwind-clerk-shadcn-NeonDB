@@ -62,7 +62,6 @@ export default function Home() {
                     {feature.title}
                   </h4>
                   <p className="text-gray-300">{feature.description}</p>
-                  <p className="text-gray-300">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
