@@ -30,7 +30,7 @@ export default function RootLayout({ children }) {
       },
     }}>
       <html lang="en">
-        <body className={`${inter.className}`}>
+        <body className={`${inter.className} animated-dotted-background`}>
           <ThemeProvider attribute="class" defaultTheme="dark">
             {/* header */}
             <Header/>
