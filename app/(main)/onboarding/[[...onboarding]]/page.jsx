@@ -1,9 +1,17 @@
+'use client'
+import { OrganizationList, useOrganization } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
-const page = () => {
+const OnBoarding = () => {
+    const router = useRouter()
+    const {organization} = useOrganization()
+    
   return (
-    <div>page</div>
+    <div className='flex justify-center items-center pt-14'>
+        <OrganizationList hidePersonal/>
+    </div>
   )
 }
 
-export default page
+export default OnBoarding
