@@ -1,26 +1,27 @@
 [
     {
-      "question": "What is ZCRUM?",
-      "answer": "ZCRUM is a powerful project management tool designed to help teams organize, track, and manage their work efficiently. It combines intuitive design with robust features to streamline your workflow and boost productivity."
+      "question": "What is projecTrak?",
+      "answer": "projecTrak is an agile project management platform designed to help teams efficiently plan, track, and deliver projects. It combines powerful tools with an intuitive interface to streamline workflows and increase productivity, making it easier for teams to manage their tasks and meet project goals."
     },
     {
-      "question": "How does ZCRUM compare to other project management tools?",
-      "answer": "ZCRUM offers a unique combination of intuitive design, powerful features, and flexibility. Unlike other tools, we focus on providing a seamless experience for both agile and traditional project management methodologies, making it versatile for various team structures and project types."
+      "question": "How does projecTrak compare to other project management tools?",
+      "answer": "projecTrak sets itself apart by focusing on agile project management methodologies. Unlike other tools that may be more rigid or suited for traditional project management, projecTrak offers flexibility, scalability, and features specifically tailored for agile teams, such as customizable boards, sprint tracking, and real-time collaboration."
     },
     {
-      "question": "Is ZCRUM suitable for small teams?",
-      "answer": "Absolutely! ZCRUM is designed to be scalable and flexible. It works great for small teams and can easily grow with your organization as it expands. Our user-friendly interface ensures that teams of any size can quickly adapt and start benefiting from ZCRUM's features."
+      "question": "Is projecTrak suitable for small teams?",
+      "answer": "Yes, projecTrak is ideal for teams of all sizes, including small teams. Its scalable design and user-friendly interface make it simple for small teams to adopt, while still offering the robust features needed for growth and expanding teams. You can start small and scale as your team or projects grow."
     },
     {
-      "question": "What key features does ZCRUM offer?",
-      "answer": "ZCRUM provides a range of powerful features including intuitive Kanban boards for visualizing workflow, robust sprint planning tools for agile teams, comprehensive reporting for data-driven decisions, customizable workflows, time tracking, and team collaboration tools. These features work seamlessly together to enhance your project management experience."
+      "question": "What key features does projecTrak offer?",
+      "answer": "projecTrak provides a variety of key features including agile sprint planning, customizable Kanban boards, task tracking, team collaboration, real-time reporting, and time management tools. It allows teams to adapt workflows to their needs, track progress, and make data-driven decisions, all within a single platform."
     },
     {
-      "question": "Can ZCRUM handle multiple projects simultaneously?",
-      "answer": "Yes, ZCRUM is built to manage multiple projects concurrently. You can easily switch between projects, and get a bird's-eye view of all your ongoing work. This makes ZCRUM ideal for organizations juggling multiple projects or clients."
+      "question": "Can projecTrak handle multiple projects simultaneously?",
+      "answer": "Yes, projecTrak is built to handle multiple projects at once. You can easily switch between different projects, monitor progress across teams, and have a comprehensive overview of your ongoing work. This makes projecTrak perfect for organizations managing several projects or clients simultaneously."
     },
     {
       "question": "Is there a learning curve for new users?",
-      "answer": "While ZCRUM is packed with features, we've designed it with user-friendliness in mind. New users can quickly get up to speed thanks to our intuitive interface, helpful onboarding process, and comprehensive documentation."
+      "answer": "projecTrak is designed to be user-friendly with an intuitive interface that helps new users get started quickly. With easy onboarding, in-app tips, and detailed documentation, even users with little experience in project management can start using projecTrak effectively in no time."
     }
   ]
+  
