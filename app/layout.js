@@ -4,6 +4,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import Header from "@/components/header";
 import { shadesOfPurple } from "@clerk/themes";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default function RootLayout({ children }) {
             {/* header */}
             <Header/>
             <main className="min-h-screen">{children}</main>
+            <Toaster/>
             <footer className="py-12 bg-gray-900">
               <div className=" text-center container mx-auto px-4 ">
                 <p>Made by &copy; Asif ahmed sahil - 2024</p>
