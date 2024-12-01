@@ -9,7 +9,7 @@ import { checkUser } from "@/lib/checkUser";
 import UseLoading from "./use-loader";
 
 const Header = async() => {
-  await checkUser()
+  // await checkUser()
   return (
     <header>
       <nav className="py-6 px-8 flex justify-between items-center">
