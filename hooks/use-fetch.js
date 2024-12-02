@@ -7,11 +7,11 @@ const useFetch = (cb) => {
   const [error, setError] = useState(null);
 
   const fn = async (...args) => {
-    setLoading(false);
+    setLoading(true);
     setError(null);
 
     try {
-      const response = await cb(args);
+      const response = await cb(...args);
       setData(response);
       setError(null);
     } catch (error) {
@@ -22,8 +22,7 @@ const useFetch = (cb) => {
     }
   };
 
-  return { data , loading , error , fn , setData}
-
+  return { data, loading, error, fn, setData };
 };
 
 export default useFetch;

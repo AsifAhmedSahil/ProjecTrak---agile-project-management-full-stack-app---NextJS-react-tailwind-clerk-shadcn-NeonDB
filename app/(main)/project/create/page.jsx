@@ -10,11 +10,16 @@ import { Input } from "@/components/ui/input";
 import { projectSchema } from "@/app/lib/validators";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import useFetch from "@/hooks/use-fetch";
+import { createProject } from "@/actions/projects";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const CreateProjectPage = () => {
   const { isLoaded: isOrgLoaded, membership } = useOrganization();
   const { isLoaded: isUserLoaded } = useUser();
   const [isAdmin, setIsAdmin] = useState(false);
+  const router = useRouter();
 
   const {
     register,
@@ -23,6 +28,20 @@ const CreateProjectPage = () => {
   } = useForm({
     resolver: zodResolver(projectSchema),
   });
+
+  const {
+    data: project,
+    loading,
+    error,
+    fn: createProjectFn,
+  } = useFetch(createProject);
+
+  useEffect(() => {
+    if (project) {
+      toast.success("Project Created Succesfully");
+      router.push(`/project/${project.id}`);
+    }
+  }, [loading]);
 
   useEffect(() => {
     if (isOrgLoaded && isUserLoaded && membership) {
@@ -45,9 +64,9 @@ const CreateProjectPage = () => {
     );
   }
 
-  const onSubmit = async () =>{
-
-  }
+  const onSubmit = async (data) => {
+    createProjectFn(data);
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -55,8 +74,11 @@ const CreateProjectPage = () => {
         Create New Project
       </h1>
 
-      <form className="flex flex-col space-y-4" onSubmit={handleSubmit(onSubmit)}>
-      <div>
+      <form
+        className="flex flex-col space-y-4"
+        onSubmit={handleSubmit(onSubmit)}
+      >
+        <div>
           <Input
             id="name"
             {...register("name")}
@@ -67,7 +89,7 @@ const CreateProjectPage = () => {
             <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
-      <div>
+        <div>
           <Input
             id="key"
             {...register("key")}
@@ -92,7 +114,17 @@ const CreateProjectPage = () => {
           )}
         </div>
 
-        <Button size="lg" className="bg-blue-500 text-white" type="submit">Create Project</Button>
+        <Button
+          disabled={loading}
+          size="lg"
+          className="bg-blue-500 text-white"
+          type="submit"
+        >
+          {loading ? "creating..." : "Create Project"}
+        </Button>
+        {error && (
+          <p className="text-red-500 text-xl font-bold">{error.message}</p>
+        )}
       </form>
     </div>
   );
