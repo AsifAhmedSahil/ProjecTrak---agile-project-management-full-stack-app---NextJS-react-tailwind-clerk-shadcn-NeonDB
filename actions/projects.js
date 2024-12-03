@@ -75,3 +75,35 @@ export async function getProjects(orgId){
   return projects
 
 }
+
+export async function deleteProject(projectId) {
+
+  const { userId , orgId , orgRole } = auth()
+
+  if(!userId || !orgId){
+    throw new Error("Unauthorized!")
+  }
+
+  if(orgRole !== "org:admin"){
+    throw new Error("only organization admins can delete projects")
+  }
+
+  const project = await db.project.findUnique({
+    where:{
+      id: projectId
+    }
+  });
+
+  if(!project || project.organizationId !== orgId){
+    throw new Error("Project not found or you dont have permission to delete it")
+  }
+
+  await db.project.delete({
+    where:{
+      id: projectId
+    }
+  })
+
+  return {success:true}
+  
+}

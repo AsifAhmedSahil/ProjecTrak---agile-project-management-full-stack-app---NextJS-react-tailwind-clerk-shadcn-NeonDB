@@ -28,7 +28,7 @@ export default async function ProjectList({ orgId }) {
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
                 {project.name}
-                <DeleteProject projectId={orgId}/>
+                <DeleteProject projectId={project.id}/>
               </CardTitle>
             </CardHeader>
             <CardContent>
