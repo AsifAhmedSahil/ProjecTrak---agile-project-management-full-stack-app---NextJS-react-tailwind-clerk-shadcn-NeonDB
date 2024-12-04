@@ -107,3 +107,25 @@ export async function deleteProject(projectId) {
   return {success:true}
   
 }
+
+export async function getProject(projectId) {
+
+  const {userId,orgId} = auth()
+
+  if(!userId || !orgId){
+    throw new Error("Unauthorized")
+  }
+
+  const user = await db.user.findUnique({
+    where:{
+      clerkUserId:userId
+    }
+  })
+
+  if(!user){
+    throw new Error("User not found!")
+  }
+
+  
+  
+}

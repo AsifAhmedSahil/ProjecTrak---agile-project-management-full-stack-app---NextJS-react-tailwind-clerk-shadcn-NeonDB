@@ -36,7 +36,7 @@ export default async function ProjectList({ orgId }) {
                 {project.description}
               </p>
               <Link
-                href={`project/${project.id}`}
+                href={`/project/${project.id}`}
                 className="text-yellow-500 hover:underline font-bold"
               >
                 {" "}
