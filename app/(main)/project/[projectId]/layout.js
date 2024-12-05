@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { Suspense } from "react";
 
-const ProjectLayout = ({children}) => {
+const ProjectLayout = ({ children }) => {
   return (
-    <div>{children}</div>
-  )
-}
+    <div className="mx-auto">
+      <Suspense fallback={<span>Loading Projects ...</span>}>{children}</Suspense>
+    </div>
+  );
+};
 
-export default ProjectLayout
+export default ProjectLayout;

@@ -126,6 +126,23 @@ export async function getProject(projectId) {
     throw new Error("User not found!")
   }
 
-  
+  const project = await db.project.findUnique({
+    where:{id:projectId},
+    include:{
+      sprints:{
+        orderBy:{createdAt: "desc"}
+      }
+    }
+  })
+
+  if(!project){
+    return null 
+  }
+
+  if(project.organizationId !== orgId){
+    return null 
+  }
+
+  return project
   
 }
