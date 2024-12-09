@@ -86,7 +86,7 @@ const SprintManager = ({ sprints, sprint, setSprint, projectId }) => {
         </Select>
         {canStart && (
           <Button
-            className="bg-green-600 text-white"
+            className="bg-yellow-800 text-white"
             onClick={() => handleStatusChange("ACTIVE")}
             disabled={loading}
           >
