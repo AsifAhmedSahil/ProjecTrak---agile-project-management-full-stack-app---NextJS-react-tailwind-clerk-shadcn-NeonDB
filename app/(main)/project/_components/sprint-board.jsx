@@ -5,6 +5,8 @@ import statuses from "@/data/status";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
+import IssueCreationDrawer from "./create-issue";
+
 
 const SprintBoard = ({ sprints, projectId, orgId }) => {
   const [currentSprint, setCurrentSprint] = useState(
@@ -18,6 +20,10 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
     setSelectStatus(status);
     setIsDrawerOpen(true);
   };
+
+  const handleIssueCreated = () =>{
+    // fetch issues here
+  }
 
   const onDragEnd = () => {};
 
@@ -69,6 +75,18 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
           ))}
         </div>
       </DragDropContext>
+
+
+          <IssueCreationDrawer 
+          isOpen={isDrawerOpen}
+          onClose={()=>setIsDrawerOpen(false)}
+          sprintId={currentSprint.id}
+          projectId={projectId}
+          onIssueCreated={handleIssueCreated}
+          orgId={orgId}
+          />
+
+
     </div>
   );
 };
