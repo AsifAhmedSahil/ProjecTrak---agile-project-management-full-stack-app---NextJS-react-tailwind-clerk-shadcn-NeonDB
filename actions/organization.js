@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import { auth, clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient,  } from "@clerk/nextjs/server";
 
 export async function getOrganization(slug) {
   const { userId } = auth();
@@ -46,37 +46,46 @@ export async function getOrganization(slug) {
 }
 
 export async function getOrganizationUsers(orgId) {
+  // Await the auth function to get the userId
+  const { userId } = await auth();  // Ensure auth() is awaited
 
-  const {userId} = auth()
-
-  if(!userId){
-    throw new Error("Unauthorized")
+  if (!userId) {
+    throw new Error("Unauthorized");
   }
 
+  // Retrieve the user from your database
   const user = await db.user.findUnique({
-    where:{
-      clerkUserId: userId
-    }
-  })
+    where: { clerkUserId: userId },
+  });
 
-  if(!user){
-    throw new Error("User not found")
+  if (!user) {
+    throw new Error("User not found");
   }
 
-  const organizationMemberShips = await clerkClient().organizations.getOrganizationMembershipList({
-    organizationId: orgId
-  })
+  // Ensure clerkClient() resolves before calling its methods
+  const clerkClientInstance = await clerkClient();  // Make sure clerkClient is awaited properly
 
-  const userIds = organizationMemberShips.data.map((memberShip) => memberShip.publicUserData.userId)
+  // Now call the getOrganizationMembershipList method
+  const organizationMemberships = await clerkClientInstance.organizations.getOrganizationMembershipList({
+    organizationId: orgId,
+  });
 
+  // Process the list of memberships
+  const userIds = organizationMemberships.data.map(
+    (membership) => membership.publicUserData.userId
+  );
+
+  // Retrieve users from the database based on the list of userIds
   const users = await db.user.findMany({
-    where:{
-      clerkUserId:{
-        in:userIds
-      }
-    }
-  })
+    where: {
+      clerkUserId: {
+        in: userIds,
+      },
+    },
+  });
 
-  return users
-  
+  return users;
 }
+
+
+
