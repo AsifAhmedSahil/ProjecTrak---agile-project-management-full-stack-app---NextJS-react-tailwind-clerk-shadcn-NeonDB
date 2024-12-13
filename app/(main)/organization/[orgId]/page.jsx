@@ -4,7 +4,7 @@ import React from "react";
 import ProjectList from "./_components/Project-list";
 
 const Organization = async ({ params }) => {
-  const { orgId } = params;
+  const { orgId } = await params;
 
   const organization = await getOrganization(orgId);
 
