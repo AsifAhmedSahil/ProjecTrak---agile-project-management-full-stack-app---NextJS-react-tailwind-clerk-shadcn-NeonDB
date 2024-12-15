@@ -139,5 +139,5 @@ export async function getProject(projectId) {
     return null;
   }
 
-  return project; up
+  return project; 
 }
