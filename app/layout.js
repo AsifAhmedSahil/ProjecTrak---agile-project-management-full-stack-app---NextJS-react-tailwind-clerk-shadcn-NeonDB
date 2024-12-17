@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
     <ClerkClientProvider >
       <html lang="en">
         <body className={`${inter.className} animated-dotted-background`}>
-          <ThemeProvider attribute="class" defaultTheme="dark" >
+          <ThemeProvider attribute="class" defaultTheme="dark" > updsate
             {/* header */}
             <Header/>
             <main className="min-h-screen">{children}</main>
