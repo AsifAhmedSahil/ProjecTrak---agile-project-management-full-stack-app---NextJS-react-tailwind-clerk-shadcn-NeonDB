@@ -27,7 +27,6 @@ export default function RootLayout({ children }) {
               <Toaster />
               <footer className="py-12 bg-gray-900">
                 <div className=" text-center container mx-auto px-4 ">
-                div
                   <p>Made by &copy; Asif ahmed sahil - 2024</p>
                 </div>
               </footer>
