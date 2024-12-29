@@ -81,6 +81,7 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
           isOpen={isDrawerOpen}
           onClose={()=>setIsDrawerOpen(false)}
           sprintId={currentSprint.id}
+          status={selectStatus}
           projectId={projectId}
           onIssueCreated={handleIssueCreated}
           orgId={orgId}

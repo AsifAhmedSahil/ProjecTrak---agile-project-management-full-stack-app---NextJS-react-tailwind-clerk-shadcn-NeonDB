@@ -1,8 +1,9 @@
 "use client";
 
-import { createIssue } from "@/actions/issues";
-import { getOrganizationUsers } from "@/actions/organization";
-import { issueSchema } from "@/app/lib/validators";
+import { useEffect } from "react";
+import { BarLoader } from "react-spinners";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Drawer,
   DrawerContent,
@@ -10,6 +11,7 @@ import {
   DrawerTitle,
 } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Select,
   SelectContent,
@@ -17,14 +19,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
+import MDEditor from "@uiw/react-md-editor";
 import useFetch from "@/hooks/use-fetch";
-import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { BarLoader } from "react-spinners";
+import { createIssue } from "@/actions/issues";
 
-const IssueCreationDrawer = ({
+import { issueSchema } from "@/app/lib/validators";
+import { getOrganizationUsers } from "@/actions/organization";
+import { toast } from "sonner";
+
+export default function IssueCreationDrawer({
   isOpen,
   onClose,
   sprintId,
@@ -32,21 +35,7 @@ const IssueCreationDrawer = ({
   projectId,
   onIssueCreated,
   orgId,
-}) => {
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(issueSchema),
-    defaultValues: {
-      priority: "MEDIUM",
-      description: "",
-      assigneeId: "",
-    },
-  });
-
+}) {
   const {
     loading: createIssueLoading,
     fn: createIssueFn,
@@ -60,13 +49,44 @@ const IssueCreationDrawer = ({
     data: users,
   } = useFetch(getOrganizationUsers);
 
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm({
+    resolver: zodResolver(issueSchema),
+    defaultValues: {
+      priority: "MEDIUM",
+      description: "",
+      assigneeId: "",
+    },
+  });
+
   useEffect(() => {
     if (isOpen && orgId) {
       fetchUsers(orgId);
     }
   }, [isOpen, orgId]);
 
-  const onSubmit = async (data) => {};
+  const onSubmit = async (data) => {
+    await createIssueFn(projectId, {
+      ...data,
+      status,
+      sprintId,
+    });
+  };
+
+  useEffect(() => {
+    if (newIssue) {
+      reset();
+      onClose();
+      onIssueCreated();
+      toast.success("issue added successfully")
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [newIssue, createIssueLoading]);
 
   return (
     <Drawer open={isOpen} onClose={onClose}>
@@ -75,7 +95,7 @@ const IssueCreationDrawer = ({
           <DrawerTitle>Create New Issue</DrawerTitle>
         </DrawerHeader>
         {usersLoading && <BarLoader width={"100%"} color="#36d7b7" />}
-        <form>
+        <form onSubmit={handleSubmit(onSubmit)} className="p-4 space-y-4">
           <div>
             <label htmlFor="title" className="block text-sm font-medium mb-1">
               Title
@@ -87,30 +107,31 @@ const IssueCreationDrawer = ({
               </p>
             )}
           </div>
+
           <div>
             <label
               htmlFor="assigneeId"
               className="block text-sm font-medium mb-1"
             >
-              AssigneID
+              Assignee
             </label>
             <Controller
-              control={control}
               name="assigneeId"
+              control={control}
               render={({ field }) => (
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select Assignee" />
+                    <SelectValue placeholder="Select assignee" />
                   </SelectTrigger>
                   <SelectContent>
-                    {users?.map((user) => {
+                    {users?.map((user) => (
                       <SelectItem key={user.id} value={user.id}>
                         {user?.name}
-                      </SelectItem>;
-                    })}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               )}
@@ -121,10 +142,62 @@ const IssueCreationDrawer = ({
               </p>
             )}
           </div>
+
+          <div>
+            <label
+              htmlFor="description"
+              className="block text-sm font-medium mb-1"
+            >
+              Description
+            </label>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <MDEditor value={field.value} onChange={field.onChange} />
+              )}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="priority"
+              className="block text-sm font-medium mb-1"
+            >
+              Priority
+            </label>
+            <Controller
+              name="priority"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select priority" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="LOW">Low</SelectItem>
+                    <SelectItem value="MEDIUM">Medium</SelectItem>
+                    <SelectItem value="HIGH">High</SelectItem>
+                    <SelectItem value="URGENT">Urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+              )}
+            />
+          </div>
+
+          {error && <p className="text-red-500 mt-2">{error.message}</p>}
+          <Button
+            type="submit"
+            disabled={createIssueLoading}
+            className="w-full"
+          >
+            {createIssueLoading ? "Creating..." : "Create Issue"}
+          </Button>
         </form>
       </DrawerContent>
     </Drawer>
   );
-};
-
-export default IssueCreationDrawer;
+}

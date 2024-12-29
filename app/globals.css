@@ -84,3 +84,8 @@ body {
   /* animation: moveDots 10s linear infinite; */
 }
 
+.wmde-markdown ul {
+  list-style-type: disc;
+  padding-left: 15px !important;
+  color: white;
+}
