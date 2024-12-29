@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import IssueCreationDrawer from "./create-issue";
 import useFetch from "@/hooks/use-fetch";
-import { getIssuesForSprint } from "@/actions/issues";
+import { getIssuesForSprint, updateIssueOrder } from "@/actions/issues";
 import { BarLoader } from "react-spinners";
 import IssuesCard from "@/components/IssuesCard";
 
@@ -51,6 +51,12 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
   const handleIssueCreated = () => {
     fetchIssues(currentSprint.id);
   };
+
+  const {
+    fn: updateIssueOrderFn,
+    error: updateIssueError,
+    loading: updateIssueLoading,
+  } = useFetch(updateIssueOrder);
 
   const onDragEnd = async (result) => {
     if (currentSprint.status === "PLANNED") {
@@ -118,10 +124,10 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
     const sortedIssues = newOrderedData.sort((a, b) => a.order - b.order);
     setIssues(newOrderedData, sortedIssues);
 
-    // updateIssueOrderFn(sortedIssues);
+    updateIssueOrderFn(sortedIssues);
   };
 
-  console.log(issues)
+  console.log(issues);
 
   if (issuesError) return <div>Error Loading Issues...</div>;
 
@@ -138,10 +144,15 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
 
       {/* kanban board */}
 
-      {issuesLoading && (
+      {
+        updateIssueError && (
+          <p className="text-red-500 mt-2">{updateIssueError.message}</p>
+        )
+      }
+
+      {(issuesLoading || updateIssueLoading) && (
         <BarLoader width={"100%"} color="#36d7b7" className="mt-4" />
       )}
-      
 
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 bg-slate-900 p-4 rounded-lg mt-4">
@@ -161,32 +172,32 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
                     {issues
                       ?.filter((issue) => issue.status === coloum.key)
                       .map((issue, index) => (
-                        
                         <Draggable
                           key={issue.id}
                           draggableId={issue.id}
                           index={index}
                         >
-                           {(provided) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                          >
-                            <IssuesCard
-                              issue={issue}
-                              onDelete={() => fetchIssues(currentSprint.id)}
-                              onUpdate={(updated) =>
-                                setIssues((issues) =>
-                                  issues.map((issue) => {
-                                    if (issue.id === updated.id) return updated;
-                                    return issue;
-                                  })
-                                )
-                              }
-                            />
-                          </div>
-                        )}
+                          {(provided) => (
+                            <div
+                              ref={provided.innerRef}
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                            >
+                              <IssuesCard
+                                issue={issue}
+                                onDelete={() => fetchIssues(currentSprint.id)}
+                                onUpdate={(updated) =>
+                                  setIssues((issues) =>
+                                    issues.map((issue) => {
+                                      if (issue.id === updated.id)
+                                        return updated;
+                                      return issue;
+                                    })
+                                  )
+                                }
+                              />
+                            </div>
+                          )}
                         </Draggable>
                       ))}
 
