@@ -11,6 +11,14 @@ import { getIssuesForSprint } from "@/actions/issues";
 import { BarLoader } from "react-spinners";
 import IssuesCard from "@/components/IssuesCard";
 
+function reorder(list, startIndex, endIndex) {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+}
+
 const SprintBoard = ({ sprints, projectId, orgId }) => {
   const [currentSprint, setCurrentSprint] = useState(
     sprints.find((spr) => spr.status === "ACTIVE") || sprints[0]
@@ -44,7 +52,74 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
     fetchIssues(currentSprint.id);
   };
 
-  const onDragEnd = () => {};
+  const onDragEnd = async (result) => {
+    if (currentSprint.status === "PLANNED") {
+      toast.warning("Start the sprint to update board");
+      return;
+    }
+    if (currentSprint.status === "COMPLETED") {
+      toast.warning("Cannot update board after sprint end");
+      return;
+    }
+    const { destination, source } = result;
+
+    if (!destination) {
+      return;
+    }
+
+    if (
+      destination.droppableId === source.droppableId &&
+      destination.index === source.index
+    ) {
+      return;
+    }
+
+    const newOrderedData = [...issues];
+
+    // source and destination list
+    const sourceList = newOrderedData.filter(
+      (list) => list.status === source.droppableId
+    );
+
+    const destinationList = newOrderedData.filter(
+      (list) => list.status === destination.droppableId
+    );
+
+    if (source.droppableId === destination.droppableId) {
+      const reorderedCards = reorder(
+        sourceList,
+        source.index,
+        destination.index
+      );
+
+      reorderedCards.forEach((card, i) => {
+        card.order = i;
+      });
+    } else {
+      // remove card from the source list
+      const [movedCard] = sourceList.splice(source.index, 1);
+
+      // assign the new list id to the moved card
+      movedCard.status = destination.droppableId;
+
+      // add new card to the destination list
+      destinationList.splice(destination.index, 0, movedCard);
+
+      sourceList.forEach((card, i) => {
+        card.order = i;
+      });
+
+      // update the order for each card in destination list
+      destinationList.forEach((card, i) => {
+        card.order = i;
+      });
+    }
+
+    const sortedIssues = newOrderedData.sort((a, b) => a.order - b.order);
+    setIssues(newOrderedData, sortedIssues);
+
+    // updateIssueOrderFn(sortedIssues);
+  };
 
   console.log(issues)
 
