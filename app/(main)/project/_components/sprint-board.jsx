@@ -10,6 +10,7 @@ import useFetch from "@/hooks/use-fetch";
 import { getIssuesForSprint, updateIssueOrder } from "@/actions/issues";
 import { BarLoader } from "react-spinners";
 import IssuesCard from "@/components/IssuesCard";
+import BoardFilter from "@/components/BoardFilter";
 
 function reorder(list, startIndex, endIndex) {
   const result = Array.from(list);
@@ -47,6 +48,12 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
   }, [currentSprint.id]);
 
   const [filteredIssues, setFilterIssues] = useState(issues);
+
+  const handleFilterChange = (newFilteredIssue) =>{
+
+    setFilterIssues(newFilteredIssue)
+
+  }
 
   const handleIssueCreated = () => {
     fetchIssues(currentSprint.id);
@@ -142,6 +149,12 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
         projectId={projectId}
       />
 
+      {
+        issues && !issuesLoading && (
+          <BoardFilter issues={issues} onFilterChange={handleFilterChange}/>
+        )
+      }
+
       {/* kanban board */}
 
       {
@@ -169,7 +182,7 @@ const SprintBoard = ({ sprints, projectId, orgId }) => {
                       {coloum.name}
                     </h3>
                     {/* issues */}
-                    {issues
+                    {filteredIssues
                       ?.filter((issue) => issue.status === coloum.key)
                       .map((issue, index) => (
                         <Draggable
